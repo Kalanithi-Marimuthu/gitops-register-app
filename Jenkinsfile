@@ -1,10 +1,6 @@
 pipeline {
     agent { label "Jenkins-Agent" }
 
-    // parameters {
-    //     string(name: 'IMAGE_TAG', description: 'Image Tag to use')
-    // }
-
     environment {
         APP_NAME = "register-app-pipeline"
     }
@@ -52,7 +48,7 @@ pipeline {
             echo 'The pipeline failed. Investigate the logs.'
         }
         success {
-            echo 'The pipeline executed successfully!'
+            echo 'The pipeline executed successfully! Deployment tags updated.'
         }
     }
 }
