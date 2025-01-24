@@ -2,7 +2,7 @@ pipeline {
     agent { label "Jenkins-Agent" }
 
     parameters {
-        string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Image Tag to use')
+        string(name: 'IMAGE_TAG', description: 'Image Tag to use')
     }
 
     environment {
