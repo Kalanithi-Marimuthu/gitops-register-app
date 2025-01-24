@@ -1,9 +1,9 @@
 pipeline {
     agent { label "Jenkins-Agent" }
 
-    parameters {
-        string(name: 'IMAGE_TAG', description: 'Image Tag to use')
-    }
+    // parameters {
+    //     string(name: 'IMAGE_TAG', description: 'Image Tag to use')
+    // }
 
     environment {
         APP_NAME = "register-app-pipeline"
