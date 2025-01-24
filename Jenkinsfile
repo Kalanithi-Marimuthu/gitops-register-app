@@ -33,7 +33,7 @@ pipeline {
 
         stage("Push the changed deployment file to Git") {
             steps {
-                withCredentials([string(credentialsId: 'github-token-id', variable: 'GITHUB_TOKEN')]) {
+                withCredentials([string(credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN')]) {
                     sh """
                        git config --global user.name "rajnages"
                        git config --global user.email "nagesrajavarapu@gmail.com"
