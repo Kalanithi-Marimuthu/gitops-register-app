@@ -1,7 +1,12 @@
 pipeline {
     agent { label "Jenkins-Agent" }
+
+    parameters {
+        string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Image Tag to use')
+    }
+
     environment {
-              APP_NAME = "register-app-pipeline"
+        APP_NAME = "register-app-pipeline"
     }
 
     stages {
@@ -12,15 +17,14 @@ pipeline {
         }
 
         stage("Checkout from SCM") {
-               steps {
-                   git branch: 'main', credentialsId: 'github', url: 'https://github.com/rajnages/gitops-register-app.git'
-               }
+            steps {
+                git branch: 'main', credentialsId: 'github', url: 'https://github.com/rajnages/gitops-register-app.git'
+            }
         }
 
         stage("Update the Deployment Tags") {
             steps {
                 sh """
-                   cat deployment.yaml
                    sed -i 's/${APP_NAME}.*/${APP_NAME}:${IMAGE_TAG}/g' deployment.yaml
                    cat deployment.yaml
                 """
@@ -29,19 +33,26 @@ pipeline {
 
         stage("Push the changed deployment file to Git") {
             steps {
-                sh """
-                   git config --global user.name "rajnages"
-                   git config --global user.email "nagesrajavarapu@gmail.com"
-                   git config --global credential.https://github.com/rajnages/gitops-register-app.git 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
-                   git add deployment.yaml
-                   git commit -m "Updated Deployment Manifest"
-                   git push https://rajnages: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@github.com/rajnages/gitops-register-app main
-                """
-                // withCredentials([string(credentialsId: 'token1', variable: 'token1', gitToolName: 'Default')]){
-                //   sh "git push https://github.com/sagarkulkarni1989/gitops-register-app main"
-                // }
+                withCredentials([string(credentialsId: 'github-token-id', variable: 'GITHUB_TOKEN')]) {
+                    sh """
+                       git config --global user.name "rajnages"
+                       git config --global user.email "nagesrajavarapu@gmail.com"
+                       git remote set-url origin https://rajnages:${GITHUB_TOKEN}@github.com/rajnages/gitops-register-app.git
+                       git add deployment.yaml
+                       git commit -m "Update deployment tag to ${IMAGE_TAG} for ${APP_NAME}"
+                       git push origin main
+                    """
+                }
             }
         }
-      
+    }
+
+    post {
+        failure {
+            echo 'The pipeline failed. Investigate the logs.'
+        }
+        success {
+            echo 'The pipeline executed successfully!'
+        }
     }
 }
