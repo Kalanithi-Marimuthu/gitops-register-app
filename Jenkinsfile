@@ -14,7 +14,7 @@ pipeline {
 
         stage("Checkout from SCM") {
             steps {
-                git branch: 'main', url: 'https://github.com/rajnages/gitops-register-app.git'
+                git branch: 'main', url: 'https://github.com/Kalanithi-Marimuthu/gitops-register-app.git'
             }
         }
 
@@ -31,9 +31,9 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN')]) {
                     sh """
-                       git config --global user.name "rajnages"
-                       git config --global user.email "nagesrajavarapu@gmail.com"
-                       git remote set-url origin https://rajnages:${GITHUB_TOKEN}@github.com/rajnages/gitops-register-app.git
+                       git config --global user.name "Kalanithi"
+                       git config --global user.email "kalanithimarimuthu18@gmail.com"
+                       git remote set-url origin https://Kalanithi-Marimuthu:${GITHUB_TOKEN}@github.com/Kalanithi-Marimuthu/gitops-register-app.git
                        git add deployment.yaml
                        git commit -m "Update deployment tag to ${IMAGE_TAG} for ${APP_NAME}"
                        git push origin main
